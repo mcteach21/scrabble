@@ -1,13 +1,13 @@
 import asyncio
 import re
 import time
+import pandas
+from onlinedico import word_exists
 
 # print('******************************************')
 # print('**************** Scrabble ****************')
 # print('******************************************')
-import pandas
 
-from DicoLinkParser import word_exists
 
 _voy = ['a', 'e', 'i', 'o', 'u', 'y']
 _no_double = ['h', 'j', 'q', 'v', 'w', 'x']  # regex..
@@ -76,10 +76,11 @@ def extract_word(letter1, letter2):
 
 
 def display():
-    print()
+    print('****************************************')
+    print('mots trouvés :')
     for k in range(2, len(_letters) + 1):
-        print(k, '==>', _all_words.get(k), '[', len(_all_words.get(k)), ']')
-    print()
+        print(k, 'lettres :', _all_words.get(k), '[', len(_all_words.get(k)), ']')
+    print('****************************************')
 
     _max = 0
     for k in range(2, len(_letters) + 1):
@@ -96,17 +97,16 @@ def display():
     dframe = pandas.DataFrame(data)
     dframe.index = dframe.index + 1
     print(dframe)
-    print()
 
 
 async def check_words(all_words=True):
     stats()
+    print('****************************************')
+    print('combinaisons :')
     for n in range(2, len(_letters) + 1):
         combined = []
 
-        print()
         print(f'{n}.')
-
         if n == 2:
             for i in range(0, len(_letters)):
                 for j in range(0, len(_letters)):
@@ -128,9 +128,11 @@ async def check_words(all_words=True):
                                 if all_words or word_exists(w):
                                     combined.append(w)
                                     # print(f'{w}..ok')
+        print()
 
         # combined.sort()
         _all_words[n] = combined
+    print('****************************************')
 
     display()
 
@@ -152,8 +154,6 @@ def scrabble():
     if len(_letters) == 0:
         print('no letters! bye.')
     else:
-
-        # print('****************************************')
         print('**************** words.. ***************')
         start_ms = int(round(time.time() * 1000))
 
@@ -161,7 +161,7 @@ def scrabble():
 
         end_ms = int(round(time.time() * 1000))
         print('time elapsed : ', int(round((end_ms - start_ms) / 1000)), 's.')
-        # print('****************************************')
+        print('****************************************')
 
 
 if __name__ == '__main__':

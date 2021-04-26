@@ -1,12 +1,13 @@
 from html.parser import HTMLParser
-import urllib.request as urllib2
+from urllib.request import Request, urlopen
+
 from termcolor import colored
 
 lstSources = []
 lstDefinitions = {}
 
 
-class DicoLinkParser(HTMLParser):
+class OnlineDico(HTMLParser):
     sectionTag = 'div'
     sourceTag = 'h3'
     definitionTag = 'li'
@@ -111,9 +112,16 @@ def dictionary_search(word):
 
 def create_parser(word):
     _init()
-    _parser = DicoLinkParser()
-    html_page = urllib2.urlopen('https://www.dicolink.com/mots/' + word)
-    html_content = str(html_page.read().decode('utf-8'))
+    _parser = OnlineDico()
+
+    # html_page = urllib2.urlopen('https://www.dicolink.com/mots/' + word)
+    # html_content = str(html_page.read().decode('utf-8'))
+
+    req = Request('https://www.dicolink.com/mots/' + word, headers={'User-Agent': 'XYZ/3.0'})
+    webpage = urlopen(req, timeout=50)
+
+    html_content = str(webpage.read().decode('utf-8'))
+
     _parser.feed(html_content)
     return _parser
 
@@ -138,14 +146,20 @@ def word_exists(word):
 
 
 async def dictionary_exists_async(word):
-    parser = DicoLinkParser()
-    html_page = urllib2.urlopen('https://www.dicolink.com/mots/' + word)
-    html_content = str(html_page.read().decode('utf-8'))
+    parser = OnlineDico()
+
+    # html_page = urllib2.urlopen('https://www.dicolink.com/mots/' + word)
+    # html_content = str(html_page.read().decode('utf-8'))
+
+    req = Request('https://www.dicolink.com/mots/' + word, headers={'User-Agent': 'XYZ/3.0'})
+    webpage = urlopen(req, timeout=50)
+
+    html_content = str(webpage.read().decode('utf-8'))
     parser.feed(html_content)
 
-    # print('\t', word, ' ==>', parser.is_found())
+    print('\t', word, ' ==>', parser.is_found())
     return parser.word_exist()
 
 
 if __name__ == '__main__':
-    dictionary_search('xi')
+    dictionary_search('wu')
