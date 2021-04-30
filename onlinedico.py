@@ -162,4 +162,5 @@ async def dictionary_exists_async(word):
 
 
 if __name__ == '__main__':
-    dictionary_search('wu')
+    word = input('mot recherché : ')
+    dictionary_search(word)
